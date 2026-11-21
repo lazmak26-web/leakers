@@ -26,8 +26,9 @@ export function Hero() {
       // headline drifts up, terminal drifts down: depth on scroll
       gsap.to('[data-headline]', { yPercent: -18, ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
       gsap.to('[data-term]', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
-      // Continuous float — the logo and terminal drift like the two cards in the brief.
-      gsap.to('[data-prism] img', { y: 18, rotate: 2.5, duration: 4.5, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: bootDelay / 1000 + 1.4 })
+      // Continuous float — the prism drifts and tilts so it never looks static.
+      gsap.to('[data-prism] img', { y: 30, rotate: 4.5, duration: 4, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: bootDelay / 1000 + 1.3 })
+      gsap.to('[data-prism]', { x: -18, duration: 5.6, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: bootDelay / 1000 + 1.3 })
       gsap.to('[data-term-float]', { y: 12, duration: 3.6, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: bootDelay / 1000 + 1.8 })
     }, el)
     return () => ctx.revert()
@@ -45,7 +46,7 @@ export function Hero() {
           {site.tagline}<span className="hidden sm:inline"> · authorised testing only</span>
         </div>
 
-        <h1 data-headline className="display text-[clamp(2.1rem,8.6vw,7rem)] lg:text-[min(7.4vw,8rem)]" aria-label="We break it before they do.">
+        <h1 data-headline className="display text-[clamp(1.9rem,7.2vw,5.6rem)] lg:text-[min(6vw,6.4rem)]" aria-label="We break it before they do.">
           {lines.map((l, i) => (
             <Decrypt key={l} text={l} trigger="mount" delay={bootDelay + 150 + i * 260} speed={45} className={`block ${i === 1 ? 'md:pl-[1.6em]' : ''}`} />
           ))}
@@ -64,7 +65,7 @@ export function Hero() {
           </div>
           <div className="relative lg:col-span-6 lg:col-start-7">
             {/* Floating prism logo — the hero's side visual on desktop */}
-            <div data-prism className="pointer-events-none absolute -top-48 right-[4%] z-20 hidden w-[clamp(300px,30vw,480px)] [perspective:1000px] lg:block xl:-top-56">
+            <div data-prism className="pointer-events-none absolute -top-72 right-[2%] z-20 hidden w-[clamp(360px,36vw,580px)] [perspective:1000px] lg:block xl:-top-80">
               <div aria-hidden className="absolute inset-8 -z-10 rounded-full bg-signal/30 blur-[80px]" />
               <img src="/logo.png" alt="" className="w-full drop-shadow-[0_40px_70px_rgba(0,0,0,0.85)]" />
             </div>
