@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { CircuitPath } from '../components/CircuitPath'
 import { scrollToId } from '../lib/motion'
 import { Hero } from '../sections/Hero'
-import { Process, Record, Services, Team } from '../sections/Sections'
+import { Process, Services, Team } from '../sections/Sections'
 import { Shop } from '../sections/Shop'
 
 export default function Home() {
@@ -25,7 +25,6 @@ export default function Home() {
           <Services />
           <Process />
           <Team />
-          <Record />
         </div>
       </div>
     </>

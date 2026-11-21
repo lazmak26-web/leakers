@@ -2,7 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { useLayoutEffect, useMemo, useRef } from 'react'
 import { Decrypt, useReveal } from '../components/fx'
 import { SectionTitle } from '../components/ui'
-import { members, process, record, services, site, stats, type Member } from '../data/team'
+import { members, process, services, site, type Member } from '../data/team'
 import { gsap, prefersReducedMotion } from '../lib/motion'
 
 /* ---------- Services ---------- */
@@ -129,49 +129,3 @@ export function Team() {
     </section>
   )
 }
-
-/* ---------- Track record ---------- */
-function Counter({ value }: { value: string }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  useLayoutEffect(() => {
-    const el = ref.current
-    const n = parseInt(value, 10)
-    if (!el || isNaN(n) || n === 0 || prefersReducedMotion()) return
-    const suffix = value.replace(/^\d+/, '')
-    const obj = { v: 0 }
-    const t = gsap.to(obj, {
-      v: n, duration: 1.6, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-      onUpdate: () => { el.textContent = Math.round(obj.v) + suffix },
-    })
-    return () => { t.kill() }
-  }, [value])
-  return <span ref={ref}>{value}</span>
-}
-
-export function Record() {
-  const ref = useReveal<HTMLElement>()
-  return (
-    <section id="record" ref={ref} className="shell py-24 md:py-36">
-      <SectionTitle path="record" title="Track record" />
-      <div className="grid grid-cols-2 gap-px border border-line bg-line lg:grid-cols-4">
-        {stats.map((s) => (
-          <div key={s.label} data-reveal className="bg-void p-6 md:p-8">
-            <p className="text-5xl font-bold condensed md:text-7xl"><Counter value={s.value} /></p>
-            <p className="mt-3 text-sm text-mute">{s.label}</p>
-          </div>
-        ))}
-      </div>
-      <ul className="mt-12 border-t border-line">
-        {record.map((r) => (
-          <li key={r.event + r.year} data-reveal className="grid grid-cols-[56px_1fr_auto] items-baseline gap-4 border-b border-line py-5 md:grid-cols-[120px_1fr_auto]">
-            <span className="font-mono text-sm text-mute">{r.year}</span>
-            <span className="text-lg md:text-2xl">{r.event}</span>
-            <span className="font-semibold wide text-signal">{r.result}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
-

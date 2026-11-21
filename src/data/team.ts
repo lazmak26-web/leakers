@@ -1,6 +1,6 @@
 /**
  * Everything the team will want to edit lives in this file:
- * contact details, members, services, track record.
+ * Discord link, services, process and members.
  * Replace the placeholder values marked with  ← EDIT  before going public.
  */
 
@@ -70,20 +70,4 @@ export const members: Member[] = [
   { handle: 'gh0stbyte', role: 'Reverse engineering', focus: ['Binary exploitation', 'Malware analysis', 'Firmware'] },
   { handle: 'zer0trace', role: 'Cloud security', focus: ['AWS', 'Kubernetes', 'IAM abuse'], certs: 'AWS Security' },
   { handle: 'm4rrow', role: 'OSINT & social engineering', focus: ['Recon', 'Phishing sims', 'Attack surface'] },
-]
-
-// ← EDIT: replace with your real numbers
-export const stats = [
-  { value: '120+', label: 'assessments delivered' },
-  { value: '40+', label: 'CTF competitions played' },
-  { value: '300+', label: 'vulnerabilities reported' },
-  { value: '0', label: 'tests without written authorisation' },
-]
-
-// ← EDIT: replace with your real results (competition, year, placing)
-export const record = [
-  { year: '2026', event: 'National CTF finals', result: 'Top 3' },
-  { year: '2026', event: 'Bug bounty programs', result: 'Hall of fame ×12' },
-  { year: '2025', event: 'Regional university CTF', result: '1st place' },
-  { year: '2025', event: 'Online jeopardy CTFs', result: 'Top 50 worldwide' },
 ]
