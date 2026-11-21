@@ -73,16 +73,20 @@ export function useReveal<T extends HTMLElement>(selector = '[data-reveal]', dep
   const ref = useRef<T>(null)
   useLayoutEffect(() => {
     const el = ref.current
-    if (!el || prefersReducedMotion()) return
+    if (!el) return
+    // Reduced motion: still fade in, just without the vertical slide.
+    const reduce = prefersReducedMotion()
     const ctx = gsap.context(() => {
       const items = el.querySelectorAll<HTMLElement>(selector)
       if (!items.length) return
-      gsap.set(items, { y: 40, autoAlpha: 0 })
+      gsap.set(items, { y: reduce ? 0 : 40, autoAlpha: 0 })
       ScrollTrigger.batch(items, {
-        start: 'top 92%',
+        start: 'top 95%',
         once: true,
-        onEnter: (batch) => gsap.to(batch, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'expo.out', stagger: 0.08, overwrite: true }),
+        onEnter: (batch) => gsap.to(batch, { y: 0, autoAlpha: 1, duration: reduce ? 0.5 : 0.9, ease: reduce ? 'power1.out' : 'expo.out', stagger: reduce ? 0.04 : 0.08, overwrite: true }),
       })
+      // Safety net: anything still hidden after load (e.g. a trigger that never fires) is shown.
+      ScrollTrigger.refresh()
     }, el)
     return () => ctx.revert()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,7 +112,12 @@ export function Decrypt({ text, as: Tag = 'span', className = '', speed = 28, de
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (prefersReducedMotion()) { el.textContent = text; return }
+    if (prefersReducedMotion()) {
+      // No scramble, but a quick fade so the text still arrives with some life.
+      el.textContent = text
+      try { el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: trigger === 'mount' ? delay : 0, easing: 'ease-out', fill: 'backwards' }) } catch { /* no WAAPI */ }
+      return
+    }
     let raf = 0
     let start = 0
     const total = text.length * speed + 300

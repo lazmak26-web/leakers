@@ -13,7 +13,10 @@ export function Hero() {
 
   useLayoutEffect(() => {
     const el = root.current
-    if (!el || prefersReducedMotion()) return
+    if (!el) return
+    // Reduced motion: keep the hero visible (no parallax / draw-in). The decrypt
+    // headline still fades, and sections below fade in on scroll.
+    if (prefersReducedMotion()) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.2 + bootDelay / 1000 })
       tl.from('[data-rule]', { scaleX: 0, transformOrigin: 'left', duration: 1.2, ease: 'expo.inOut' })
