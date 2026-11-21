@@ -5,8 +5,6 @@ import { Navbar } from './components/Navbar'
 import { bootDelay, gsap, prefersReducedMotion, scrollToTop, ScrollTrigger } from './lib/motion'
 import Home from './pages/Home'
 
-const WriteupList = lazy(() => import('./pages/Writeups').then((m) => ({ default: m.WriteupList })))
-const WriteupPage = lazy(() => import('./pages/Writeups').then((m) => ({ default: m.WriteupPage })))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 const bootLines = ['establishing secure channel', 'verifying scope', 'access granted']
@@ -86,8 +84,6 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <Home /> },
-      { path: '/writeups', element: <WriteupList /> },
-      { path: '/writeups/:slug', element: <WriteupPage /> },
       { path: '*', element: <NotFound /> },
     ],
   },

@@ -1,10 +1,8 @@
-import { ArrowUpRight, Check, Copy } from 'lucide-react'
-import { useLayoutEffect, useMemo, useRef, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { ArrowUpRight } from 'lucide-react'
+import { useLayoutEffect, useMemo, useRef } from 'react'
 import { Decrypt, useReveal } from '../components/fx'
-import { Button, SectionTitle } from '../components/ui'
+import { SectionTitle } from '../components/ui'
 import { members, process, record, services, site, stats, type Member } from '../data/team'
-import { writeups } from '../data/writeups'
 import { gsap, prefersReducedMotion } from '../lib/motion'
 
 /* ---------- Services ---------- */
@@ -48,7 +46,7 @@ export function Process() {
     return () => ctx.revert()
   }, [])
   return (
-    <section ref={ref} className="bg-coal">
+    <section ref={ref} className="bg-coal/70">
       <div className="shell grid gap-12 py-24 md:py-36 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-32">
@@ -60,7 +58,7 @@ export function Process() {
           <span aria-hidden data-progress className="absolute bottom-0 left-[15px] top-0 w-px origin-top bg-signal" />
           {process.map((p, i) => (
             <li key={p.title} data-step className="relative pb-14 pl-14 last:pb-0">
-              <span className="absolute left-0 top-1 grid h-8 w-8 place-items-center border border-line bg-coal font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
+              <span className="absolute left-0 top-1 grid h-8 w-8 place-items-center border border-line bg-void font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="text-2xl font-bold wide md:text-3xl">{p.title}</h3>
               <p className="mt-3 max-w-md text-paper/70">{p.body}</p>
             </li>
@@ -120,11 +118,11 @@ export function Team() {
       <SectionTitle path="team" title="The operators" intro="A small team of specialists. You talk directly to the people doing the testing." />
       <div className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
         {members.map((m) => <Operator key={m.handle} m={m} />)}
-        <a href="#contact" data-reveal className="group flex flex-col justify-between gap-10 bg-void p-6 transition-colors hover:bg-signal md:p-8">
+        <a href={site.discord} target="_blank" rel="noreferrer noopener" data-reveal className="group flex flex-col justify-between gap-10 bg-void p-6 transition-colors hover:bg-signal md:p-8">
           <ArrowUpRight size={32} className="transition-transform duration-500 group-hover:rotate-45" />
           <div>
             <p className="text-2xl font-bold wide">Want to join?</p>
-            <p className="mt-2 text-sm text-paper/70 group-hover:text-paper">We recruit through CTFs. Send us your best write-up.</p>
+            <p className="mt-2 text-sm text-paper/70 group-hover:text-paper">We recruit through CTFs. Come talk to us on Discord.</p>
           </div>
         </a>
       </div>
@@ -177,128 +175,3 @@ export function Record() {
   )
 }
 
-/* ---------- Write-ups preview ---------- */
-export function WriteupsPreview() {
-  const ref = useReveal<HTMLElement>()
-  return (
-    <section id="writeups" ref={ref} className="shell py-24 md:py-36">
-      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <SectionTitle path="writeups" title="Latest write-ups" />
-        <Link to="/writeups" className="group mb-12 inline-flex shrink-0 items-center gap-2 text-sm font-semibold md:mb-16">
-          <span className="link-wipe">All write-ups</span><ArrowUpRight size={16} />
-        </Link>
-      </div>
-      <ul className="border-t border-line">
-        {writeups.map((w) => (
-          <li key={w.slug} data-reveal className="border-b border-line">
-            <Link to={`/writeups/${w.slug}`} className="group grid gap-3 py-7 md:grid-cols-12 md:items-baseline md:gap-8">
-              <span className="font-mono text-xs text-mute md:col-span-2">{w.tag} · {w.read}</span>
-              <span className="text-2xl font-bold wide transition-colors group-hover:text-signal md:col-span-6 md:text-3xl">{w.title}</span>
-              <span className="text-sm text-paper/60 md:col-span-4">{w.summary}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
-
-/* ---------- Contact ---------- */
-export function Contact() {
-  const [f, setF] = useState({ name: '', email: '', org: '', service: services[0].title, message: '', authorised: false })
-  const [errors, setErrors] = useState<Record<string, string>>({})
-  const [sent, setSent] = useState(false)
-  const [copied, setCopied] = useState(false)
-
-  const submit = (e: FormEvent) => {
-    e.preventDefault()
-    const errs: Record<string, string> = {}
-    if (f.name.trim().length < 2) errs.name = 'Enter your name.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.trim())) errs.email = 'Enter a valid email so we can reply.'
-    if (f.message.trim().length < 10) errs.message = 'Tell us a little about what you want tested.'
-    if (!f.authorised) errs.authorised = 'We only test assets you own or are authorised to test.'
-    setErrors(errs)
-    if (Object.keys(errs).length) { document.getElementById(`ct-${Object.keys(errs)[0]}`)?.focus(); return }
-    const body = `Name: ${f.name}\nEmail: ${f.email}\nOrganisation: ${f.org || '—'}\nService: ${f.service}\n\n${f.message}\n\nI confirm I own or am authorised to request testing of these assets.`
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(`Engagement request — ${f.service}`)}&body=${encodeURIComponent(body)}`
-    setSent(true)
-  }
-
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(site.email); setCopied(true); setTimeout(() => setCopied(false), 1800) } catch { /* clipboard blocked */ }
-  }
-
-  const input = (k: string) => `mt-2 w-full border-b bg-transparent py-3 text-lg outline-none transition-colors placeholder:text-ash focus:border-paper ${errors[k] ? 'border-signal' : 'border-line'}`
-  const err = (k: string) => errors[k] && <p id={`ct-${k}-err`} className="mt-2 text-sm text-signal">{errors[k]}</p>
-  const set = (k: keyof typeof f, v: string | boolean) => { setF((s) => ({ ...s, [k]: v })); if (errors[k]) setErrors((e) => ({ ...e, [k]: '' })) }
-
-  return (
-    <section id="contact" className="shell py-24 md:py-36">
-      <div className="grid gap-14 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <SectionTitle compact path="contact" title="Start an engagement" intro="Tell us what you want tested. We reply within one business day with questions and a proposed scope." />
-          <dl className="space-y-6 text-sm">
-            <div>
-              <dt className="text-mute">Email</dt>
-              <dd className="mt-1 flex items-center gap-3 text-lg">
-                <a href={`mailto:${site.email}`} className="link-wipe">{site.email}</a>
-                <button onClick={copy} aria-label="Copy email address" className="text-mute hover:text-paper">{copied ? <Check size={16} /> : <Copy size={16} />}</button>
-              </dd>
-            </div>
-            <div><dt className="text-mute">PGP fingerprint</dt><dd className="mt-1 break-all font-mono text-xs">{site.pgp}</dd></div>
-            <div><dt className="text-mute">Based in</dt><dd className="mt-1">{site.location}</dd></div>
-          </dl>
-        </div>
-
-        <div className="lg:col-span-6 lg:col-start-7">
-          {sent ? (
-            <div className="border border-line p-8" role="status">
-              <p className="font-mono text-sm text-signal">[✓] request drafted</p>
-              <p className="mt-4 text-3xl font-bold wide">Your email app should be open.</p>
-              <p className="mt-3 text-paper/70">Send the drafted message and we will reply within one business day. If nothing opened, write to <a className="link-wipe text-paper" href={`mailto:${site.email}`}>{site.email}</a>.</p>
-              <button onClick={() => setSent(false)} className="link-wipe mt-6 text-sm">Edit the request</button>
-            </div>
-          ) : (
-            <form onSubmit={submit} noValidate className="space-y-8">
-              <div className="grid gap-8 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="ct-name" className="text-sm text-mute">Name</label>
-                  <input id="ct-name" value={f.name} onChange={(e) => set('name', e.target.value)} autoComplete="name" aria-invalid={!!errors.name} aria-describedby={errors.name ? 'ct-name-err' : undefined} className={input('name')} />
-                  {err('name')}
-                </div>
-                <div>
-                  <label htmlFor="ct-email" className="text-sm text-mute">Work email</label>
-                  <input id="ct-email" type="email" value={f.email} onChange={(e) => set('email', e.target.value)} autoComplete="email" aria-invalid={!!errors.email} aria-describedby={errors.email ? 'ct-email-err' : undefined} className={input('email')} />
-                  {err('email')}
-                </div>
-                <div>
-                  <label htmlFor="ct-org" className="text-sm text-mute">Organisation (optional)</label>
-                  <input id="ct-org" value={f.org} onChange={(e) => set('org', e.target.value)} autoComplete="organization" className={input('org')} />
-                </div>
-                <div>
-                  <label htmlFor="ct-service" className="text-sm text-mute">Service</label>
-                  <select id="ct-service" value={f.service} onChange={(e) => set('service', e.target.value)} className={`${input('service')} cursor-pointer bg-void`}>
-                    {services.map((s) => <option key={s.id}>{s.title}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label htmlFor="ct-message" className="text-sm text-mute">What should we test?</label>
-                <textarea id="ct-message" rows={4} value={f.message} onChange={(e) => set('message', e.target.value)} placeholder="Targets, timeline, anything we should know" aria-invalid={!!errors.message} aria-describedby={errors.message ? 'ct-message-err' : undefined} className={`${input('message')} resize-none`} />
-                {err('message')}
-              </div>
-              <div>
-                <label className="flex cursor-pointer items-start gap-3 text-sm text-paper/80">
-                  <input id="ct-authorised" type="checkbox" checked={f.authorised} onChange={(e) => set('authorised', e.target.checked)} aria-describedby={errors.authorised ? 'ct-authorised-err' : undefined} className="mt-0.5 h-4 w-4 shrink-0 accent-[#FF2020]" />
-                  I own these assets or have written permission to request security testing of them.
-                </label>
-                {err('authorised')}
-              </div>
-              <Button type="submit" className="w-full sm:w-auto">Send request</Button>
-            </form>
-          )}
-        </div>
-      </div>
-    </section>
-  )
-}

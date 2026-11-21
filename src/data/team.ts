@@ -7,14 +7,10 @@
 export const site = {
   name: 'LEAKERS',
   tagline: 'Offensive security team',
-  email: 'contact@leakers.team', // ← EDIT: your real contact address
-  location: 'Morocco · working remotely worldwide', // ← EDIT
-  pgp: '7F3A 91C2 0E5D 44B8 A1F0  6C2E 9D13 5B70 2A4E 8C11', // ← EDIT: your real PGP fingerprint or remove
+  discord: 'https://discord.gg/3AEc6We5r',
   socials: [
+    { label: 'Discord', href: 'https://discord.gg/3AEc6We5r' },
     { label: 'GitHub', href: 'https://github.com/lazmak26-web' },
-    { label: 'X', href: 'https://x.com' }, // ← EDIT
-    { label: 'LinkedIn', href: 'https://linkedin.com' }, // ← EDIT
-    { label: 'Discord', href: 'https://discord.com' }, // ← EDIT
   ],
 }
 

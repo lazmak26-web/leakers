@@ -1,6 +1,7 @@
-import { Menu, X } from 'lucide-react'
+import { ArrowUpRight, Menu, X } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { site } from '../data/team'
 import { getLenis, gsap, lockScroll, scrollToId } from '../lib/motion'
 
 export function Logo({ className = '' }: { className?: string }) {
@@ -12,13 +13,6 @@ export function Logo({ className = '' }: { className?: string }) {
   )
 }
 
-const links = [
-  { id: 'services', label: 'Services' },
-  { id: 'team', label: 'Team' },
-  { id: 'record', label: 'Record' },
-  { id: 'writeups', label: 'Write-ups' },
-]
-
 /** Go to a home-page section from anywhere. */
 export function useSectionNav() {
   const { pathname } = useLocation()
@@ -27,6 +21,15 @@ export function useSectionNav() {
     if (pathname === '/') scrollToId(id)
     else navigate(`/#${id}`)
   }
+}
+
+function TabLabel({ label }: { label: string }) {
+  return (
+    <>
+      <span className="block transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-full">{label}</span>
+      <span aria-hidden className="absolute inset-0 translate-y-full text-signal transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0">{label}</span>
+    </>
+  )
 }
 
 export function Navbar() {
@@ -61,13 +64,14 @@ export function Navbar() {
     if (open) {
       gsap.set(m, { display: 'flex' })
       gsap.fromTo(m, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.7, ease: 'expo.inOut' })
-      gsap.fromTo(m.querySelectorAll('[data-m]'), { yPercent: 110 }, { yPercent: 0, duration: 0.9, ease: 'expo.out', stagger: 0.05, delay: 0.3 })
+      gsap.fromTo(m.querySelectorAll('[data-m]'), { yPercent: 110 }, { yPercent: 0, duration: 0.9, ease: 'expo.out', stagger: 0.06, delay: 0.3 })
     } else {
       gsap.to(m, { clipPath: 'inset(0 0 100% 0)', duration: 0.5, ease: 'expo.inOut', onComplete: () => { gsap.set(m, { display: 'none' }) } })
     }
   }, [open])
 
-  const pick = (id: string) => { setOpen(false); window.setTimeout(() => go(id), open ? 350 : 0) }
+  const toShop = () => { setOpen(false); window.setTimeout(() => go('shop'), open ? 350 : 0) }
+  const tab = 'group relative block overflow-hidden text-[14px] font-semibold tracking-wide'
 
   return (
     <>
@@ -75,39 +79,35 @@ export function Navbar() {
         <nav className="shell flex h-16 items-center justify-between md:h-20" aria-label="Main">
           <Link to="/" className="text-xl md:text-2xl" aria-label="LEAKERS home" onClick={() => pathname === '/' && getLenis()?.scrollTo(0)}><Logo /></Link>
 
-          <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-9 lg:flex">
-            {links.map((l) => (
-              <li key={l.id}>
-                <button onClick={() => go(l.id)} className="group relative block overflow-hidden text-[13px] font-medium tracking-wide text-mute hover:text-paper">
-                  <span className="block transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-full">{l.label}</span>
-                  <span aria-hidden className="absolute inset-0 translate-y-full text-paper transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0">{l.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex items-center gap-2">
-            <button onClick={() => go('contact')} className="hidden h-10 items-center gap-2 bg-paper px-4 text-[13px] font-semibold text-void transition-colors hover:bg-signal hover:text-paper md:inline-flex">
-              Start an engagement
-            </button>
-            <button className="grid h-10 w-10 place-items-center lg:hidden" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'}>
-              {open ? <X size={22} /> : <Menu size={22} />}
-            </button>
+          <div className="hidden items-center gap-10 md:flex">
+            <button onClick={() => go('shop')} className={tab}><TabLabel label="Shop" /></button>
+            <a href={site.discord} target="_blank" rel="noreferrer noopener" className="group inline-flex h-10 items-center gap-2 bg-signal px-5 text-[13px] font-semibold transition-colors hover:bg-paper hover:text-void">
+              Contact <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:rotate-45" />
+            </a>
           </div>
+
+          <button className="grid h-10 w-10 place-items-center md:hidden" onClick={() => setOpen((v) => !v)} aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'}>
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </nav>
       </header>
 
-      <div ref={menu} id="mobile-menu" className="fixed inset-0 z-40 hidden flex-col justify-between bg-void px-4 pb-8 pt-24 lg:hidden" aria-hidden={!open}>
+      {/* mobile: two large tabs, thumb-reachable */}
+      <div ref={menu} id="mobile-menu" className="fixed inset-0 z-40 hidden flex-col justify-between bg-void px-4 pb-8 pt-24 md:hidden" aria-hidden={!open}>
         <ul>
-          {[...links, { id: 'contact', label: 'Contact' }].map((l) => (
-            <li key={l.id} className="overflow-hidden border-b border-line">
-              <button tabIndex={open ? 0 : -1} onClick={() => pick(l.id)} className="block w-full py-3 text-left display text-[13vw] leading-none sm:text-7xl">
-                <span data-m className="block">{l.label}</span>
-              </button>
-            </li>
-          ))}
+          <li className="overflow-hidden border-b border-line">
+            <button tabIndex={open ? 0 : -1} onClick={toShop} className="block w-full py-4 text-left display text-[16vw] leading-none">
+              <span data-m className="block">Shop</span>
+            </button>
+          </li>
+          <li className="overflow-hidden border-b border-line">
+            <a tabIndex={open ? 0 : -1} href={site.discord} target="_blank" rel="noreferrer noopener" className="flex items-center justify-between py-4 display text-[16vw] leading-none text-signal">
+              <span data-m className="block">Contact</span>
+              <ArrowUpRight data-m className="h-[0.6em] w-[0.6em]" />
+            </a>
+          </li>
         </ul>
-        <p className="font-mono text-xs text-mute">authorised testing only · responsible disclosure</p>
+        <p className="font-mono text-xs text-mute">Contact opens our Discord server</p>
       </div>
     </>
   )

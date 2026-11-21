@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from 'react'
 import { Decrypt } from '../components/fx'
 import { SignalField } from '../components/SignalField'
 import { Terminal } from '../components/Terminal'
-import { Button, ButtonLink } from '../components/ui'
+import { Button } from '../components/ui'
 import { site } from '../data/team'
 import { bootDelay, gsap, prefersReducedMotion, scrollToId } from '../lib/motion'
 
@@ -51,8 +51,8 @@ export function Hero() {
               LEAKERS is an ethical hacking team. With your permission, we find the holes in your apps, networks and cloud, then help you close them.
             </p>
             <div data-fade className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button magnetic onClick={() => scrollToId('contact')} className="w-full sm:w-auto">Start an engagement</Button>
-              <ButtonLink to="/writeups" variant="line" magnetic className="w-full sm:w-auto">Read our write-ups</ButtonLink>
+              <Button variant="signal" magnetic onClick={() => scrollToId('shop')} className="w-full sm:w-auto">Start an engagement</Button>
+              <a href={site.discord} target="_blank" rel="noreferrer noopener" className="inline-flex h-14 w-full items-center justify-center border border-paper/30 px-7 text-[13px] font-semibold tracking-[0.04em] wide transition-colors hover:border-paper hover:bg-paper hover:text-void sm:w-auto">Join our Discord</a>
             </div>
           </div>
           <div data-term className="lg:col-span-6 lg:col-start-7">
