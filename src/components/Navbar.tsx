@@ -6,9 +6,9 @@ import { getLenis, gsap, lockScroll, scrollToId } from '../lib/motion'
 
 export function Logo({ className = '' }: { className?: string }) {
   return (
-    <span className={`relative inline-flex items-center font-black wide tracking-[-0.04em] ${className}`}>
+    <span className={`relative inline-flex items-center gap-[0.4em] font-black wide tracking-[-0.04em] ${className}`}>
+      <img src="/logo-256.png" alt="" aria-hidden className="h-[1.3em] w-[1.3em] shrink-0 object-contain" />
       LEAKERS
-      <span aria-hidden className="ml-1 inline-block h-[0.5em] w-[0.9em] translate-y-[0.02em] bg-signal" />
     </span>
   )
 }
