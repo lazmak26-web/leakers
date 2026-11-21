@@ -21,10 +21,14 @@ export function Hero() {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' }, delay: 0.2 + bootDelay / 1000 })
       tl.from('[data-rule]', { scaleX: 0, transformOrigin: 'left', duration: 1.2, ease: 'expo.inOut' })
         .from('[data-fade]', { y: 24, autoAlpha: 0, duration: 1, stagger: 0.08 }, '-=0.6')
+        .from('[data-prism]', { autoAlpha: 0, y: -40, rotate: -6, duration: 1.3 }, '-=1')
         .from('[data-term]', { y: 60, autoAlpha: 0, duration: 1.2 }, '-=0.9')
       // headline drifts up, terminal drifts down: depth on scroll
       gsap.to('[data-headline]', { yPercent: -18, ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
       gsap.to('[data-term]', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
+      // Continuous float — the logo and terminal drift like the two cards in the brief.
+      gsap.to('[data-prism] img', { y: 18, rotate: 2.5, duration: 4.5, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: bootDelay / 1000 + 1.4 })
+      gsap.to('[data-term-float]', { y: 12, duration: 3.6, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: bootDelay / 1000 + 1.8 })
     }, el)
     return () => ctx.revert()
   }, [])
@@ -58,8 +62,17 @@ export function Hero() {
               <a href={site.discord} target="_blank" rel="noreferrer noopener" className="inline-flex h-14 w-full items-center justify-center border border-paper/30 px-7 text-[13px] font-semibold tracking-[0.04em] wide transition-colors hover:border-paper hover:bg-paper hover:text-void sm:w-auto">Join our Discord</a>
             </div>
           </div>
-          <div data-term className="lg:col-span-6 lg:col-start-7">
-            <Terminal />
+          <div className="relative lg:col-span-6 lg:col-start-7">
+            {/* Floating prism logo — the hero's side visual on desktop */}
+            <div data-prism className="pointer-events-none absolute -top-28 right-0 z-20 hidden w-[clamp(200px,20vw,320px)] [perspective:1000px] lg:block">
+              <div aria-hidden className="absolute inset-6 -z-10 rounded-full bg-signal/25 blur-[70px]" />
+              <img src="/logo.png" alt="" className="w-full drop-shadow-[0_40px_70px_rgba(0,0,0,0.85)]" />
+            </div>
+            <div data-term className="lg:pt-24">
+              <div data-term-float>
+                <Terminal />
+              </div>
+            </div>
           </div>
         </div>
       </div>
