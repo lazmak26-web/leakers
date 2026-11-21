@@ -33,5 +33,20 @@ export function lockScroll(locked: boolean) {
   document.documentElement.style.overflow = locked ? 'hidden' : ''
 }
 
-export const money = (n: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: n % 1 ? 2 : 0 }).format(n)
+/** Smooth-scroll to a section id, offset for the fixed nav. */
+export function scrollToId(id: string) {
+  const el = document.getElementById(id)
+  if (!el) return
+  if (lenis) lenis.scrollTo(el, { offset: -72, duration: 1.4 })
+  else el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+}
+
+/** First visit in a session plays a short boot screen; animations behind it wait this long. */
+export const bootDelay = (() => {
+  if (typeof window === 'undefined' || prefersReducedMotion()) return 0
+  try {
+    if (sessionStorage.getItem('lkr.booted')) return 0
+    sessionStorage.setItem('lkr.booted', '1')
+  } catch { return 0 }
+  return 1500
+})()

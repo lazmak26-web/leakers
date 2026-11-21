@@ -89,3 +89,66 @@ export function useReveal<T extends HTMLElement>(selector = '[data-reveal]', dep
   }, deps)
   return ref
 }
+
+/* ---------- DecryptedText (React Bits) ---------- */
+const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*<>/\\_-+=!?'
+interface DecryptProps {
+  text: string
+  as?: ElementType
+  className?: string
+  /** ms per character settling */
+  speed?: number
+  delay?: number
+  /** start when scrolled into view (default) or immediately */
+  trigger?: 'view' | 'mount' | 'hover'
+}
+export function Decrypt({ text, as: Tag = 'span', className = '', speed = 28, delay = 0, trigger = 'view' }: DecryptProps) {
+  const ref = useRef<HTMLElement>(null)
+  const run = useRef<() => void>(() => {})
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    if (prefersReducedMotion()) { el.textContent = text; return }
+    let raf = 0
+    let start = 0
+    const total = text.length * speed + 300
+    const frame = (t: number) => {
+      if (!start) start = t
+      const elapsed = t - start
+      let out = ''
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i]
+        if (ch === ' ' || ch === '\n') { out += ch; continue }
+        out += elapsed > i * speed + 260 ? ch : GLYPHS[(Math.random() * GLYPHS.length) | 0]
+      }
+      el.textContent = out
+      if (elapsed < total) raf = requestAnimationFrame(frame)
+      else el.textContent = text
+    }
+    run.current = () => { cancelAnimationFrame(raf); start = 0; raf = requestAnimationFrame(frame) }
+
+    if (trigger === 'hover') { el.textContent = text; return () => cancelAnimationFrame(raf) }
+    // scramble immediately so the final text never flashes before the effect
+    el.textContent = text.replace(/[^\s]/g, () => GLYPHS[(Math.random() * GLYPHS.length) | 0])
+    let timer = 0
+    if (trigger === 'mount') {
+      timer = window.setTimeout(() => run.current(), delay)
+      return () => { clearTimeout(timer); cancelAnimationFrame(raf) }
+    }
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { timer = window.setTimeout(() => run.current(), delay); io.disconnect() }
+    }, { rootMargin: '0px 0px -10% 0px' })
+    io.observe(el)
+    return () => { io.disconnect(); clearTimeout(timer); cancelAnimationFrame(raf) }
+  }, [text, speed, delay, trigger])
+  return (
+    <Tag
+      ref={ref}
+      className={className}
+      aria-label={text}
+      onMouseEnter={trigger === 'hover' ? () => run.current() : undefined}
+    >
+      {text}
+    </Tag>
+  )
+}
