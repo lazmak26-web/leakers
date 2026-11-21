@@ -1,30 +1,30 @@
 [
   {
-    "name": "Web App Pentest",
+    "name": "Web Application Security Lifecycle Management",
     "category": "Service",
-    "description": "Full manual test of one web application or API, with a report and free retest.",
-    "price": "On quote",
+    "description": "Web Security 360 — A complete end-to-end process covering reconnaissance, vulnerability assessment, penetration testing, reporting, hardening, continuous monitoring, incident response, and re-testing to keep your website secure 24/7.",
+    "price": "$99",
     "badge": "Popular"
   },
   {
-    "name": "Recon Toolkit",
+    "name": "Wallet Drainer",
     "category": "Tools",
-    "description": "Our scripts and wordlists for subdomain discovery and attack-surface mapping.",
+    "description": "Wallet Drainer Process . all tools u need to make a crypto wallet drainer",
     "price": "$29",
     "badge": "New"
   },
   {
-    "name": "CTF Bootcamp",
-    "category": "Training",
-    "description": "Four weeks of guided challenges: web, crypto, pwn and forensics, with live sessions.",
+    "name": "bot discord",
+    "category": "bot",
+    "description": "A Discord bot with all the functions you want, customized for you. ",
     "price": "$49",
     "badge": ""
   },
   {
-    "name": "Security Audit",
+    "name": "sender",
     "category": "Service",
-    "description": "Code and cloud configuration review that finds what scanners miss.",
-    "price": "On quote",
+    "description": "email sender full optimized . only inbox",
+    "price": "$99",
     "badge": ""
   }
 ]
