@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Web App Pentest",
+    "category": "Service",
+    "description": "Full manual test of one web application or API, with a report and free retest.",
+    "price": "On quote",
+    "badge": "Popular"
+  },
+  {
+    "name": "Recon Toolkit",
+    "category": "Tools",
+    "description": "Our scripts and wordlists for subdomain discovery and attack-surface mapping.",
+    "price": "$29",
+    "badge": "New"
+  },
+  {
+    "name": "CTF Bootcamp",
+    "category": "Training",
+    "description": "Four weeks of guided challenges: web, crypto, pwn and forensics, with live sessions.",
+    "price": "$49",
+    "badge": ""
+  },
+  {
+    "name": "Security Audit",
+    "category": "Service",
+    "description": "Code and cloud configuration review that finds what scanners miss.",
+    "price": "On quote",
+    "badge": ""
+  }
+]

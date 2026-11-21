@@ -7,7 +7,7 @@ Website for the LEAKERS ethical hacking team. React + TypeScript, Tailwind CSS v
 Everything the team changes lives in two files:
 
 - `src/data/team.ts` — Discord link, socials, services, process, members, stats, track record (placeholders are marked `← EDIT`)
-- `src/data/shop.ts` — shop products (name, price, description, optional image). The Order button opens Discord.
+- `public/products/` — the shop: `products.json` (names, descriptions, prices) and images `icon.png`, `icon1.png`… See `public/products/README.md`.
 
 ## Run
 
