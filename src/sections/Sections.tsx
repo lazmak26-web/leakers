@@ -26,7 +26,6 @@ export function Services() {
           </li>
         ))}
       </ul>
-      <style>{`@keyframes sweep{from{transform:translateX(0)}to{transform:translateX(420%)}}`}</style>
     </section>
   )
 }

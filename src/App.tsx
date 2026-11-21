@@ -6,6 +6,7 @@ import { bootDelay, gsap, prefersReducedMotion, scrollToTop, ScrollTrigger } fro
 import Home from './pages/Home'
 
 const NotFound = lazy(() => import('./pages/NotFound'))
+const ShopPage = lazy(() => import('./pages/ShopPage'))
 
 const bootLines = ['establishing secure channel', 'verifying scope', 'access granted']
 
@@ -84,6 +85,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { path: '/', element: <Home /> },
+      { path: '/shop', element: <ShopPage /> },
       { path: '*', element: <NotFound /> },
     ],
   },

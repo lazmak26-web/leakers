@@ -38,7 +38,6 @@ export function Navbar() {
   const bar = useRef<HTMLElement>(null)
   const menu = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
-  const go = useSectionNav()
 
   useEffect(() => {
     let last = 0
@@ -70,7 +69,6 @@ export function Navbar() {
     }
   }, [open])
 
-  const toShop = () => { setOpen(false); window.setTimeout(() => go('shop'), open ? 350 : 0) }
   const tab = 'group relative block overflow-hidden text-[14px] font-semibold tracking-wide'
 
   return (
@@ -80,7 +78,7 @@ export function Navbar() {
           <Link to="/" className="text-xl md:text-2xl" aria-label="LEAKERS home" onClick={() => pathname === '/' && getLenis()?.scrollTo(0)}><Logo /></Link>
 
           <div className="hidden items-center gap-10 md:flex">
-            <button onClick={() => go('shop')} className={tab}><TabLabel label="Shop" /></button>
+            <Link to="/shop" aria-current={pathname === '/shop' ? 'page' : undefined} className={`${tab} ${pathname === '/shop' ? 'text-signal' : ''}`}><TabLabel label="Shop" /></Link>
             <a href={site.discord} target="_blank" rel="noreferrer noopener" className="group inline-flex h-10 items-center gap-2 bg-signal px-5 text-[13px] font-semibold transition-colors hover:bg-paper hover:text-void">
               Contact <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:rotate-45" />
             </a>
@@ -96,9 +94,9 @@ export function Navbar() {
       <div ref={menu} id="mobile-menu" className="fixed inset-0 z-40 hidden flex-col justify-between bg-void px-4 pb-8 pt-24 md:hidden" aria-hidden={!open}>
         <ul>
           <li className="overflow-hidden border-b border-line">
-            <button tabIndex={open ? 0 : -1} onClick={toShop} className="block w-full py-4 text-left display text-[16vw] leading-none">
+            <Link tabIndex={open ? 0 : -1} to="/shop" onClick={() => setOpen(false)} className="block w-full py-4 text-left display text-[16vw] leading-none">
               <span data-m className="block">Shop</span>
-            </button>
+            </Link>
           </li>
           <li className="overflow-hidden border-b border-line">
             <a tabIndex={open ? 0 : -1} href={site.discord} target="_blank" rel="noreferrer noopener" className="flex items-center justify-between py-4 display text-[16vw] leading-none text-signal">

@@ -17,6 +17,19 @@ interface ShopItem {
   badge?: string
 }
 
+/** Accept only plain strings of reasonable length, so a typo in products.json can't break the page. */
+const str = (v: unknown, max: number) => (typeof v === 'string' || typeof v === 'number' ? String(v).slice(0, max) : '')
+function sanitize(data: unknown): ShopItem[] {
+  if (!Array.isArray(data)) return []
+  return data.slice(0, 60).flatMap((d) => {
+    if (!d || typeof d !== 'object') return []
+    const o = d as Record<string, unknown>
+    const name = str(o.name, 80)
+    if (!name) return []
+    return [{ name, category: str(o.category, 40), description: str(o.description, 400), price: str(o.price, 30), badge: str(o.badge, 20) }]
+  })
+}
+
 const imageFor = (i: number) => `/products/icon${i === 0 ? '' : i}.png`
 
 /** Generated cover when a product has no image. */
@@ -71,20 +84,20 @@ function Product({ p, index }: { p: ShopItem; index: number }) {
   )
 }
 
-export function Shop() {
+export function Shop({ asPage = false }: { asPage?: boolean }) {
   const [items, setItems] = useState<ShopItem[] | null>(null)
   const [failed, setFailed] = useState(false)
   useEffect(() => {
     fetch('/products/products.json', { cache: 'no-cache' })
       .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json() })
-      .then((data: unknown) => setItems(Array.isArray(data) ? (data as ShopItem[]).filter((p) => p && p.name) : []))
+      .then((data: unknown) => setItems(sanitize(data)))
       .catch(() => setFailed(true))
   }, [])
   const ref = useReveal<HTMLElement>('[data-reveal]', [items?.length ?? 0])
 
   return (
-    <section id="shop" ref={ref} className="shell py-24 md:py-36">
-      <SectionTitle path="shop" title="Shop" intro="Services, tools and training from the team. Pick one and order it directly with us on Discord." />
+    <section id="shop" ref={ref} className={`shell ${asPage ? 'pb-24 pt-32 md:pb-36 md:pt-44' : 'py-24 md:py-36'}`}>
+      <SectionTitle as={asPage ? 'h1' : 'h2'} path="shop" title="Shop" intro="Services, tools and training from the team. Pick one and order it directly with us on Discord." />
       {failed ? (
         <p className="border border-line p-8 text-paper/70">The shop could not load. Refresh the page, or <a className="link-wipe text-paper" href={site.discord} target="_blank" rel="noreferrer noopener">ask us on Discord</a>.</p>
       ) : !items ? (
@@ -100,7 +113,6 @@ export function Shop() {
           {items.map((p, i) => <Product key={i} p={p} index={i} />)}
         </div>
       )}
-      <style>{`@keyframes scan{0%{top:0}100%{top:100%}}`}</style>
     </section>
   )
 }

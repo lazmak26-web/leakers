@@ -47,11 +47,11 @@ export function Path({ children }: { children: string }) {
   return <p className="mb-5 font-mono text-xs text-mute"><span className="text-signal">~/</span>{children}</p>
 }
 
-export function SectionTitle({ path, title, intro, compact }: { path: string; title: string; intro?: string; compact?: boolean }) {
+export function SectionTitle({ path, title, intro, compact, as = 'h2' }: { path: string; title: string; intro?: string; compact?: boolean; as?: 'h1' | 'h2' }) {
   return (
     <div className="mb-12 md:mb-16">
       <Path>{path}</Path>
-      <Decrypt as="h2" text={title} className={`display block max-w-[16ch] ${compact ? 'text-[clamp(2.4rem,4.6vw,4.6rem)]' : 'text-[clamp(2.4rem,6.5vw,6rem)]'}`} />
+      <Decrypt as={as} text={title} className={`display block max-w-[16ch] ${compact ? 'text-[clamp(2.4rem,4.6vw,4.6rem)]' : 'text-[clamp(2.4rem,6.5vw,6rem)]'}`} />
       {intro && <p className="mt-6 max-w-lg text-lg text-paper/70">{intro}</p>}
     </div>
   )

@@ -4,7 +4,6 @@ import { CircuitPath } from '../components/CircuitPath'
 import { scrollToId } from '../lib/motion'
 import { Hero } from '../sections/Hero'
 import { Process, Services, Team } from '../sections/Sections'
-import { Shop } from '../sections/Shop'
 
 export default function Home() {
   const { hash } = useLocation()
@@ -21,7 +20,6 @@ export default function Home() {
       <div className="relative">
         <CircuitPath />
         <div className="relative z-10">
-          <Shop />
           <Services />
           <Process />
           <Team />

@@ -17,3 +17,10 @@ npm run dev
 ```
 
 Production: `npm run build && npm start` (serves `dist/` on `$PORT`). Deployed on Railway from `main`.
+
+## Security
+
+- `serve.json` sets HTTP security headers on every response: a strict Content-Security-Policy (no inline scripts or styles, no framing, no form posts), HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy: no-referrer`, a locked-down Permissions-Policy and cross-origin isolation headers.
+- `public/.well-known/security.txt` tells researchers how to report a vulnerability (Discord).
+- Shop data from `products.json` is validated before rendering; the site has no backend, forms or user data.
+- Run `npm audit` before releases.

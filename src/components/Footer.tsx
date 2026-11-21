@@ -1,8 +1,8 @@
 import { site } from '../data/team'
-import { Logo, useSectionNav } from './Navbar'
+import { Link } from 'react-router-dom'
+import { Logo } from './Navbar'
 
 export function Footer() {
-  const go = useSectionNav()
   const a = 'link-wipe w-fit text-paper/90 hover:text-paper'
   return (
     <footer className="relative z-10 border-t border-line bg-void">
@@ -12,7 +12,7 @@ export function Footer() {
           <p className="mt-5 max-w-sm text-sm text-mute">Ethical hacking team. We only test systems with written authorisation from their owner.</p>
         </div>
         <nav className="flex gap-8 text-sm" aria-label="Footer">
-          <button className={a} onClick={() => go('shop')}>Shop</button>
+          <Link className={a} to="/shop">Shop</Link>
           {site.socials.map((s) => <a key={s.label} className={a} href={s.href} target="_blank" rel="noreferrer noopener">{s.label}</a>)}
         </nav>
       </div>
