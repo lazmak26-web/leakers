@@ -45,7 +45,7 @@ export function Hero() {
           {site.tagline}<span className="hidden sm:inline"> · authorised testing only</span>
         </div>
 
-        <h1 data-headline className="display text-[clamp(2.4rem,10.4vw,9.6rem)] lg:text-[min(9.2vw,10rem)]" aria-label="We break it before they do.">
+        <h1 data-headline className="display text-[clamp(2.1rem,8.6vw,7rem)] lg:text-[min(7.4vw,8rem)]" aria-label="We break it before they do.">
           {lines.map((l, i) => (
             <Decrypt key={l} text={l} trigger="mount" delay={bootDelay + 150 + i * 260} speed={45} className={`block ${i === 1 ? 'md:pl-[1.6em]' : ''}`} />
           ))}
@@ -64,8 +64,8 @@ export function Hero() {
           </div>
           <div className="relative lg:col-span-6 lg:col-start-7">
             {/* Floating prism logo — the hero's side visual on desktop */}
-            <div data-prism className="pointer-events-none absolute -top-28 right-0 z-20 hidden w-[clamp(200px,20vw,320px)] [perspective:1000px] lg:block">
-              <div aria-hidden className="absolute inset-6 -z-10 rounded-full bg-signal/25 blur-[70px]" />
+            <div data-prism className="pointer-events-none absolute -top-48 right-[4%] z-20 hidden w-[clamp(300px,30vw,480px)] [perspective:1000px] lg:block xl:-top-56">
+              <div aria-hidden className="absolute inset-8 -z-10 rounded-full bg-signal/30 blur-[80px]" />
               <img src="/logo.png" alt="" className="w-full drop-shadow-[0_40px_70px_rgba(0,0,0,0.85)]" />
             </div>
             <div data-term className="lg:pt-24">
